@@ -87,7 +87,7 @@ class Toolbar:
 
         # create  tool panel
         tool_y = self.pos_y + button_padding*2
-        self.shape_selection = Panel(scrn, (sub_menu_x,tool_y), (self.width, top_border + button_padding*3))
+        self.shape_selection = Panel(scrn, (sub_menu_x,tool_y), (self.width, top_border + button_padding*4))
         self.side_panels.append(self.shape_selection)
 
         line_button = Button(scrn, [sub_menu_x + side_border, tool_y + top_border], [28, 28])
@@ -108,6 +108,13 @@ class Toolbar:
         circle_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
         circle_button.add_action(self.circle_select)
         self.shape_selection.add_button(circle_button)
+
+        elipse_button = Button(scrn, [sub_menu_x + side_border, tool_y + top_border + button_padding*3], [28, 28])
+        elipse_button.add_graphic(path + "icons/elipse.png")
+        elipse_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
+        elipse_button.add_action(self.elipse_select)
+        self.shape_selection.add_button(elipse_button)
+
         self.shape_selection.hide()
 
 
@@ -121,7 +128,8 @@ class Toolbar:
             [[pygame.K_LCTRL, pygame.K_y], self.sketchpad.redo_action],
             [[pygame.K_l], self.line_select],
             [[pygame.K_r], self.rect_select],
-            [[pygame.K_c], self.circle_select]
+            [[pygame.K_c], self.circle_select],
+            [[pygame.K_e], self.elipse_select]
         ]
 
 
@@ -228,3 +236,7 @@ class Toolbar:
     def circle_select(self):
         self.select_tool(2)
         self.select_shape(2)
+
+    def elipse_select(self):
+        self.select_tool(2)
+        self.select_shape(3)
