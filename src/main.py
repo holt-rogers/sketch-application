@@ -1,15 +1,13 @@
 import pygame
 from sketchpad import Sketchpad
+from constants import *
 
-width = 800
-height = 600
-bg_color = (202, 202, 202)
+
  
 scrn = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-pygame.display.set_caption('PySketch')   
+pygame.display.set_caption(title)   
 
 clock = pygame.time.Clock()
-fps_limit = 60
  
 # initialize modules
 sp = Sketchpad(scrn)

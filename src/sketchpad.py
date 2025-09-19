@@ -1,6 +1,7 @@
 
 from drawings import FreeShape, Action, draw_rect
 from toolbar import Toolbar
+from constants import select_rect_col
 import pygame
 
 # keeps track of drawing, moving and updating shapes
@@ -52,7 +53,7 @@ class Sketchpad:
 
     # call me an italian the way i write spaghetti fr fr
     def update_select(self):
-        select_rect_col = (169, 176, 218)
+        
 
         move_offset = [0,0]
 

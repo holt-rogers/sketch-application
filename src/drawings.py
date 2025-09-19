@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
+from constants import select_boundary_col
 
-select_boundary_col = (30, 74, 144)
 
 def draw_line(scrn, pos1, pos2, size = 1, color = (0,0,0), offset = [0,0], scaler = 1):
     scrn_size = scrn.get_size()
