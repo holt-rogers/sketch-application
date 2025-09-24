@@ -240,3 +240,11 @@ class Toolbar:
     def elipse_select(self):
         self.select_tool(2)
         self.select_shape(3)
+
+
+    def mouse_in_toolbar(self):
+        for p in self.side_panels:
+            if p.mouse_in_panel():
+                return True
+        
+        return self.main_menu.mouse_in_panel()

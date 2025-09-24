@@ -42,6 +42,12 @@ class Panel:
     
     def get_buttons(self):
         return self.buttons
+    
+    def mouse_in_panel(self):
+        
+
+        x,y = pygame.mouse.get_pos()
+        return self.rect.collidepoint((x,y)) and self.active
 
 
 class Button:

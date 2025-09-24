@@ -1,5 +1,5 @@
 
-from drawings import FreeShape, Action, draw_rect
+from drawings import FreeShape, Action, draw_rect, Line
 from toolbar import Toolbar
 from constants import select_rect_col
 import pygame
@@ -41,6 +41,8 @@ class Sketchpad:
             self.update_select()
         elif self.tool == 1:
             self.update_pen()
+        elif self.tool == 2:
+            self.update_shape()
 
         for s in self.shapes:
             s.update()
@@ -193,6 +195,20 @@ class Sketchpad:
         else:
             self.new_shape = True
     
+    def update_shape(self):
+        buttons = pygame.mouse.get_pressed()
+        if buttons[0] and self.pointer.pos != None:
+            print(self.new_shape)
+            if self.new_shape:
+                if self.shape == 0:
+                    shape = Line(self)
+                self.new_shape = False
+            
+            self.shapes[-1].add_point(self.pointer.pos)
+            
+        else:
+            self.new_shape = True
+    
     def update_mover(self):
 
         # offset
@@ -234,25 +250,28 @@ class Pointer:
         self.active = True
         self.pos = None
         self.old_pos = None
+
+        self.button_press = False
     
     def update(self):
-        if self.in_tool_bar():
+        if self.tool_bar.mouse_in_toolbar():
             if self.pos != None:
+                self.button_press = True
                 self.old_pos = self.pos
             self.pos = None
-        else:
+        elif not self.button_press:
             self.old_pos = self.pos
             self.pos = pygame.mouse.get_pos()
+        else:
+            buttons = pygame.mouse.get_pressed()
+            if not buttons[0]:
+                self.button_press = False
+        
+        
+
+        # check for button shit
+
        #print(self.pos)
     
-    def in_tool_bar(self):
 
 
-        x,y = pygame.mouse.get_pos()
-
-        # if our mouse is in the tool bar
-
-        if self.tool_bar.main_menu.rect.collidepoint((x,y)):
-            return True
-        
-        return False

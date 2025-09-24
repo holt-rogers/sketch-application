@@ -114,26 +114,8 @@ class FreeShape(Shape):
 
 
 class Line(Shape):
-    def __init__(self, sp, size = 1, color = (0,0,0)):
-        self.drawn_offset = sp.global_offset.copy()
-        self.drawn_scaler = sp.global_scaler
-
-        self.sp = sp
-        self.scrn = sp.scrn
-        self.lst = sp.shapes
-        self.size = size
-        self.color = (0,0,0)
-        self.offset = [0,0]
-        self.points = np.empty((0,2))
-
-        self.transformed_pointer = self.points.copy()
-        self.transformed_offset = self.drawn_offset
-        self.transformed_scaler = self.drawn_scaler
-
-        self.action = Action(sp.undo, sp.redo, self.lst, "add", objects=[self])
-
-        self.lst.append(self)
-
+    def __init__(self, sp, size = 2, color = (0,0,0)):
+        super().__init__(sp, size, color)
     def update(self):
         if np.size(self.points, axis=0) < 2:
             return
@@ -144,9 +126,11 @@ class Line(Shape):
     
     def add_point(self, point):
         # if we have two points already, keep origin
-        if np.size(self.points, axis=0) == 2:
-            self.points = np.delete(self.points, 1)
-
+        if np.size(self.points, axis=0) >= 2:
+            print(self.points)
+            self.points = np.array([self.points[0], self.points[-1]])
+            print(self.points)
+        
         super().add_point(point)
 
 # action for class for storing user actions for undo and redo
