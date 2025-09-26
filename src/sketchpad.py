@@ -1,5 +1,5 @@
 
-from drawings import FreeShape, Action, draw_rect, Line
+from drawings import FreeShape, Action, draw_rect, Line, Rectangle, Circle
 from toolbar import Toolbar
 from constants import select_rect_col
 import pygame
@@ -112,9 +112,6 @@ class Sketchpad:
                 except:
                     move_offset = [0,0]
 
-
-
-
                 for obj in self.selected_objects:
                     obj.move(move_offset)
 
@@ -202,6 +199,11 @@ class Sketchpad:
             if self.new_shape:
                 if self.shape == 0:
                     shape = Line(self)
+                elif self.shape == 1:
+                    shape = Rectangle(self)
+                elif self.shape == 2:
+                    shape = Circle(self)
+
                 self.new_shape = False
             
             self.shapes[-1].add_point(self.pointer.pos)
@@ -256,9 +258,9 @@ class Pointer:
     def update(self):
         if self.tool_bar.mouse_in_toolbar():
             if self.pos != None:
-                self.button_press = True
                 self.old_pos = self.pos
             self.pos = None
+            self.button_press = True
         elif not self.button_press:
             self.old_pos = self.pos
             self.pos = pygame.mouse.get_pos()

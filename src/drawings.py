@@ -22,6 +22,10 @@ def draw_rect(scrn, min_points, max_points, size=1, color=select_boundary_col):
     draw_line(scrn, (x2, y2), (x2, y1), size, color)
     draw_line(scrn, (x2, y2), (x1, y2), size, color)
 
+def draw_circle(scrn, center, point, size =1, color = (0,0,0)):
+    radius = np.sqrt((center[0] - point[0])**2 + (center[1] - point[1])**2)
+    pygame.draw.circle(scrn, color, center, radius, width=size)
+
 # redo so first 4 arguments are replaced with sketchpad
 class Shape:
     def __init__(self, sp, size = 1, color = (0,0,0)):
@@ -132,6 +136,63 @@ class Line(Shape):
             print(self.points)
         
         super().add_point(point)
+    
+    def get_boundaries(self):
+        border_offset = 5
+
+        x1,y1, x2,y2= super().get_boundaries()
+        return x1 - border_offset, y1 - border_offset, x2 + border_offset, y2 + border_offset
+
+class Rectangle(Shape):
+    def __init__(self, sp, size=2, color=(0, 0, 0)):
+        super().__init__(sp, size, color)
+    
+    def update(self):
+        if np.size(self.points, axis=0) < 2:
+            return
+
+        draw_rect(self.scrn, self.points[0], self.points[1], 2, (0,0,0))
+        
+    def add_point(self, point):
+        # if we have two points already, keep origin
+        if np.size(self.points, axis=0) >= 2:
+            print(self.points)
+            self.points = np.array([self.points[0], self.points[-1]])
+            print(self.points)
+        
+        super().add_point(point)
+
+    def get_boundaries(self):
+        border_offset = 5
+
+        x1,y1, x2,y2= super().get_boundaries()
+        return x1 - border_offset, y1 - border_offset, x2 + border_offset, y2 + border_offset
+    
+class Circle(Shape):
+    def __init__(self, sp, size=2, color=(0, 0, 0)):
+        super().__init__(sp, size, color)
+    
+    def update(self):
+        if np.size(self.points, axis=0) < 2:
+            return
+
+        draw_circle(self.scrn, self.points[0], self.points[1], 2, (0,0,0))
+        
+    def add_point(self, point):
+        # if we have two points already, keep origin
+        if np.size(self.points, axis=0) >= 2:
+            print(self.points)
+            self.points = np.array([self.points[0], self.points[-1]])
+            print(self.points)
+        
+        super().add_point(point)
+    
+    def get_boundaries(self):
+        center = self.points[0]
+        point = self.points[1]
+        radius = np.sqrt((center[0] - point[0])**2 + (center[1] - point[1])**2)
+
+        return center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius
 
 # action for class for storing user actions for undo and redo
 class Action:

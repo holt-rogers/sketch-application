@@ -5,7 +5,7 @@ path = ""
 fps_limit = 60
 width = 800
 height = 600
-title = "PySketch"
+title = "PenGuin"
 
 # colors
 bg_color = (222, 222, 222)
