@@ -13,18 +13,44 @@ def draw_line(scrn, pos1, pos2, size = 1, color = (0,0,0), offset = [0,0], scale
     pos2_transformed = [(pos2[0]+offset[0] - cx) * scaler + cx, (pos2[1] + offset[1] - cy) * scaler + cy]
     pygame.draw.line(scrn, color, pos1_transformed, pos2_transformed, size)
 
-def draw_rect(scrn, min_points, max_points, size=1, color=select_boundary_col):
+def draw_rect(scrn, min_points, max_points, size=1, color=select_boundary_col, offset = [0,0], scaler = 1):
     x1,y1 = min_points
     x2,y2 = max_points
+
+    scrn_size = scrn.get_size()
+
+    cx = round(scrn_size[0] / 2)
+    cy = round(scrn_size[1] / 2)
+
+    x1 = (x1 + offset[0] - cx)  *scaler + cx
+    x2 = (x2 + offset[0] - cx)  *scaler + cx
+
+    y1 = (y1 + offset[1] - cy)  *scaler + cy
+    y2 = (y2 + offset[1] - cy)  *scaler + cy
 
     draw_line(scrn, (x1, y1), (x2, y1), size, color)
     draw_line(scrn, (x1, y1), (x1, y2), size, color)
     draw_line(scrn, (x2, y2), (x2, y1), size, color)
     draw_line(scrn, (x2, y2), (x1, y2), size, color)
 
-def draw_circle(scrn, center, point, size =1, color = (0,0,0)):
-    radius = np.sqrt((center[0] - point[0])**2 + (center[1] - point[1])**2)
-    pygame.draw.circle(scrn, color, center, radius, width=size)
+def draw_circle(scrn, center, point, size =1, color = (0,0,0), offset = [0,0], scaler = 1):
+    scrn_size = scrn.get_size()
+
+    
+
+    cx = round(scrn_size[0] / 2)
+    cy = round(scrn_size[1] / 2)
+
+    ccx = (center[0] + offset[0] - cx) * scaler + cx
+    ccy = (center[1] + offset[1] - cy) * scaler + cy
+
+    px = (point[0] + offset[0] - cx) * scaler + cx
+    py = (point[1] + offset[1] - cy) * scaler + cy
+
+    radius = np.sqrt((ccx -px)**2 + (ccy - py)**2)
+   
+
+    pygame.draw.circle(scrn, color, (ccx, ccy), radius, width=size)
 
 # redo so first 4 arguments are replaced with sketchpad
 class Shape:
@@ -131,9 +157,7 @@ class Line(Shape):
     def add_point(self, point):
         # if we have two points already, keep origin
         if np.size(self.points, axis=0) >= 2:
-            print(self.points)
             self.points = np.array([self.points[0], self.points[-1]])
-            print(self.points)
         
         super().add_point(point)
     
@@ -151,15 +175,13 @@ class Rectangle(Shape):
         if np.size(self.points, axis=0) < 2:
             return
 
-        draw_rect(self.scrn, self.points[0], self.points[1], 2, (0,0,0))
+        draw_rect(self.scrn, self.points[0], self.points[1], 2, (0,0,0), self.sp.global_offset, self.sp.global_scaler)
         
     def add_point(self, point):
         # if we have two points already, keep origin
         if np.size(self.points, axis=0) >= 2:
-            print(self.points)
             self.points = np.array([self.points[0], self.points[-1]])
-            print(self.points)
-        
+
         super().add_point(point)
 
     def get_boundaries(self):
@@ -176,15 +198,13 @@ class Circle(Shape):
         if np.size(self.points, axis=0) < 2:
             return
 
-        draw_circle(self.scrn, self.points[0], self.points[1], 2, (0,0,0))
+        draw_circle(self.scrn, self.points[0], self.points[1], 2, (0,0,0), self.sp.global_offset, self.sp.global_scaler)
         
     def add_point(self, point):
         # if we have two points already, keep origin
         if np.size(self.points, axis=0) >= 2:
-            print(self.points)
             self.points = np.array([self.points[0], self.points[-1]])
-            print(self.points)
-        
+
         super().add_point(point)
     
     def get_boundaries(self):

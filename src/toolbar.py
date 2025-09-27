@@ -15,7 +15,7 @@ class Toolbar:
         side_border = 2
         top_border = 10
         button_padding = 40
-        button_count = 7
+        button_count = 8
         
 
         self.height = top_border*2 + button_padding*(button_count-1) + 28
@@ -53,25 +53,31 @@ class Toolbar:
         shapes_button.add_action(self.shape_select)
         self.main_menu.add_button(shapes_button)
 
-        file_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*3], [28, 28])
+        anchor_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*3], [28, 28])
+        anchor_button.add_graphic(path + "icons/anchor.png")
+        anchor_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
+        anchor_button.add_action(self.anchor_select)
+        self.main_menu.add_button(anchor_button)
+
+        file_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*4], [28, 28])
         file_button.add_graphic(path + "icons/file.png")
         file_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
         file_button.add_action(self.file_select)
         self.main_menu.add_button(file_button)
 
-        setting_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*4], [28, 28])
+        setting_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*5], [28, 28])
         setting_button.add_graphic(path + "icons/settings.png")
         setting_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
         setting_button.add_action(self.settings_select)
         self.main_menu.add_button(setting_button)
 
-        undo_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*5], [28, 28])
+        undo_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*6], [28, 28])
         undo_button.add_graphic(path + "icons/undo.png")
         undo_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
         undo_button.add_action(self.sketchpad.undo_action)
         self.main_menu.add_button(undo_button)
 
-        redo_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*6], [28, 28])
+        redo_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border + button_padding*7], [28, 28])
         redo_button.add_graphic(path + "icons/redo.png")
         redo_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
         redo_button.add_action(self.sketchpad.redo_action)
@@ -219,11 +225,14 @@ class Toolbar:
 
         self.shape_selection.hide(shown)
 
-    def file_select(self):
+    def anchor_select(self):
         self.select_tool(3)
 
-    def settings_select(self):
+    def file_select(self):
         self.select_tool(4)
+
+    def settings_select(self):
+        self.select_tool(5)
     
     def line_select(self):
         self.select_tool(2)
