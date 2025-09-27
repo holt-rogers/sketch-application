@@ -125,19 +125,31 @@ class Shape:
         y = (y - cy) / scaler - ofy + cy
         
         self.points = np.append(self.points, [[x,y]], axis=0)
+    
+    def on_screen(self):
+        scrn_size = self.scrn.get_size()
+
+        x1, y1, x2, y2 = self.get_boundaries()
+        return not ((x2 < 0) or (y2 < 0) or (x1 > scrn_size[0]) or (y1 > scrn_size[1]))
+        
 
 class FreeShape(Shape):
     def __init__(self, sp,size=2, color=(0, 0, 0)):
         super().__init__(sp, size, color)
     
     def update(self):
-        x_off, y_off = self.sp.global_offset
-
-        scaler = self.sp.global_scaler
+        if not self.on_screen():
+            return
 
         size = np.size(self.points, axis=0)
         if size < 2:
             return
+
+        x_off, y_off = self.sp.global_offset
+
+        scaler = self.sp.global_scaler
+
+
 
         for i in range(size - 1):
             draw_line(self.scrn, self.points[i], self.points[i+1], self.size, self.color, [x_off, y_off], scaler)
@@ -147,6 +159,9 @@ class Line(Shape):
     def __init__(self, sp, size = 2, color = (0,0,0)):
         super().__init__(sp, size, color)
     def update(self):
+        if not self.on_screen():
+            return
+
         if np.size(self.points, axis=0) < 2:
             return
 
@@ -172,6 +187,9 @@ class Rectangle(Shape):
         super().__init__(sp, size, color)
     
     def update(self):
+        if not self.on_screen():
+            return
+    
         if np.size(self.points, axis=0) < 2:
             return
 
@@ -195,6 +213,9 @@ class Circle(Shape):
         super().__init__(sp, size, color)
     
     def update(self):
+        if not self.on_screen():
+            return
+
         if np.size(self.points, axis=0) < 2:
             return
 
