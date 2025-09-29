@@ -33,6 +33,8 @@ class Toolbar:
 
         self.keys = {}
 
+        self.hidden = False
+
     
 
         select_button = Button(scrn, [self.pos_x + side_border, self.pos_y + top_border], [28, 28])
@@ -135,7 +137,8 @@ class Toolbar:
             [[pygame.K_l], self.line_select],
             [[pygame.K_r], self.rect_select],
             [[pygame.K_c], self.circle_select],
-            [[pygame.K_e], self.elipse_select]
+            [[pygame.K_e], self.elipse_select],
+            [[pygame.K_h], self.hide]
         ]
 
 
@@ -153,10 +156,10 @@ class Toolbar:
                 panel.add_height(diff)
 
 
-
-        self.main_menu.update()
-        for panel in self.side_panels:
-            panel.update()
+        if not self.hidden:
+            self.main_menu.update()
+            for panel in self.side_panels:
+                panel.update()
         
         self.check_shortcuts()
 
@@ -264,3 +267,6 @@ class Toolbar:
                 return True
         
         return self.main_menu.mouse_in_panel()
+
+    def hide(self):
+        self.hidden = not self.hidden
