@@ -146,16 +146,21 @@ class Toolbar:
             pos_y = abs((self.scrn_height - self.height) / 2)
             diff = pos_y-self.pos_y
 
-            for b in self.main_menu.get_buttons():
-                b.move([0, diff])
+            
+            self.main_menu.add_height(diff)
 
-            self.pos_y = pos_y
-            self.main_menu.change_rect((self.pos_x, self.pos_y, self.width, self.height))
+            for panel in self.side_panels:
+                panel.add_height(diff)
+
+
 
         self.main_menu.update()
         for panel in self.side_panels:
             panel.update()
+        
+        self.check_shortcuts()
 
+    def check_shortcuts(self):
         keys = self.keys
         # shortcuts
         for s in self.shortcuts:
@@ -172,7 +177,9 @@ class Toolbar:
                     pushed_down = True
             
             if pushed_down and shortcut_fufilled:
-                action()
+                # dont allow one key shortcut if the ctrl key is pressed
+                if (not len(s[0]) == 1) or (not keys[pygame.K_LCTRL]):
+                    action()
         
 
         self.old_keys = keys 

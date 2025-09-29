@@ -195,7 +195,6 @@ class Sketchpad:
     def update_shape(self):
         buttons = pygame.mouse.get_pressed()
         if buttons[0] and self.pointer.pos != None:
-            print(self.new_shape)
             if self.new_shape:
                 if self.shape == 0:
                     shape = Line(self)
@@ -216,8 +215,7 @@ class Sketchpad:
         # offset
         buttons = pygame.mouse.get_pressed()
 
-        if not buttons[0] and buttons[2] and self.pointer.pos != None and self.pointer.old_pos != None:
-            #print(self.global_offset)
+        if buttons[2] and self.pointer.pos != None and self.pointer.old_pos != None:
             self.global_offset[0] += (self.pointer.pos[0] - self.pointer.old_pos[0]) / self.global_scaler
             self.global_offset[1] += (self.pointer.pos[1] - self.pointer.old_pos[1]) / self.global_scaler
 
@@ -271,9 +269,6 @@ class Pointer:
         
         
 
-        # check for button shit
-
-       #print(self.pos)
     
 
 

@@ -9,6 +9,9 @@ class Panel:
         self.text = [] 
 
         self.rect = pygame.Rect(pos + dimension)
+
+        self.pos = pos
+        self.dimension = dimension
     
     def show(self, val = True):
         self.active = val
@@ -33,6 +36,17 @@ class Panel:
     
     def change_rect(self, new_rect):
         self.rect = pygame.Rect(new_rect)
+
+        self.pos = new_rect[:2]
+        self.dimension = new_rect[2:]
+    
+    def add_height(self, add):
+        self.change_rect((self.pos[0], self.pos[1] + add) + self.dimension)
+        for b in self.buttons:
+            b.move([0, add])
+        
+
+
         
     def add_button(self, button):
         self.buttons.append(button)
@@ -44,8 +58,6 @@ class Panel:
         return self.buttons
     
     def mouse_in_panel(self):
-        
-
         x,y = pygame.mouse.get_pos()
         return self.rect.collidepoint((x,y)) and self.active
 
