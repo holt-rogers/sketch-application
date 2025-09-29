@@ -89,18 +89,11 @@ class Shape:
 
     # returns min_x, min_y, max_x, max_y in terms of screen cords (including global offset and scaler)
     def get_boundaries(self):
-        scaler = self.sp.global_scaler
-        x_off, y_off = self.sp.global_offset
 
-        scrn_size = self.scrn.get_size()
-        cx = round(scrn_size[0]/2)
-        cy = round(scrn_size[1]/2)
 
-        xmin = (np.min(self.points[:, 0]) - cx + x_off) * scaler + cx
-        ymin = (np.min(self.points[:, 1]) - cy + y_off) * scaler + cy
-
-        xmax = (np.max(self.points[:, 0]) - cx + x_off) * scaler + cx
-        ymax = (np.max(self.points[:, 1]) - cy + y_off) * scaler + cy
+        
+        xmin, ymin = self.apply_transformation((np.min(self.points[:, 0]), np.min(self.points[:, 1])))
+        xmax, ymax = self.apply_transformation((np.max(self.points[:, 0]), np.max(self.points[:, 1])))
 
         return xmin, ymin, xmax, ymax
 
@@ -112,26 +105,48 @@ class Shape:
         return min_x, min_y, max_x, max_y
 
     def add_point(self, point):
-        scrn_size = self.scrn.get_size()
-        cx = round(scrn_size[0]/2)
-        cy = round(scrn_size[1]/2)
-        ofx = self.drawn_offset[0]
-        ofy = self.drawn_offset[1]
-        scaler = self.drawn_scaler
-        
 
-        x, y = point
-        x = (x - cx) / scaler - ofx + cx
-        y = (y - cy) / scaler - ofy + cy
-        
-        self.points = np.append(self.points, [[x,y]], axis=0)
+        self.points = np.append(self.points, [self.remove_transformation(point)], axis=0)
     
     def on_screen(self):
         scrn_size = self.scrn.get_size()
 
         x1, y1, x2, y2 = self.get_boundaries()
         return not ((x2 < 0) or (y2 < 0) or (x1 > scrn_size[0]) or (y1 > scrn_size[1]))
+    
+    
+    def apply_transformation(self, point):
+        scaler = self.sp.global_scaler
+        x_off, y_off = self.sp.global_offset
+
+        scrn_size = self.scrn.get_size()
+        cx = round(scrn_size[0]/2)
+        cy = round(scrn_size[1]/2)
+
+        x, y = point
+        x = (x - cx + x_off) * scaler + cx
+        y = (y - cy + y_off) * scaler + cy
+
+        return x,y
+
+    def remove_transformation(self, point):
+        scrn_size = self.scrn.get_size()
+        cx = round(scrn_size[0]/2)
+        cy = round(scrn_size[1]/2)
+        ofx = self.sp.global_offset[0]
+        ofy = self.sp.global_offset[1]
+        scaler = self.sp.global_scaler
         
+
+        x, y = point
+        x = (x - cx) / scaler - ofx + cx
+        y = (y - cy) / scaler - ofy + cy
+
+        return x,y 
+
+
+
+
 
 class FreeShape(Shape):
     def __init__(self, sp,size=2, color=(0, 0, 0)):
@@ -153,6 +168,7 @@ class FreeShape(Shape):
 
         for i in range(size - 1):
             draw_line(self.scrn, self.points[i], self.points[i+1], self.size, self.color, [x_off, y_off], scaler)
+    
 
 
 class Line(Shape):
@@ -229,8 +245,11 @@ class Circle(Shape):
         super().add_point(point)
     
     def get_boundaries(self):
-        center = self.points[0]
-        point = self.points[1]
+        if np.size(self.points, axis=0) < 2:
+            return self.points[0][0], self.points[0][1], self.points[0][0], self.points[0][1]
+
+        center = self.apply_transformation(self.points[0])
+        point = self.apply_transformation(self.points[1])
         radius = np.sqrt((center[0] - point[0])**2 + (center[1] - point[1])**2)
 
         return center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius
