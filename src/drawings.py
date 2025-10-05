@@ -52,6 +52,31 @@ def draw_circle(scrn, center, point, size =1, color = (0,0,0), offset = [0,0], s
 
     pygame.draw.circle(scrn, color, (ccx, ccy), radius, width=size)
 
+def draw_elipse(scrn, p1, p2, size=1, color=(0,0,0),offset = [0,0], scaler=1):
+
+
+    scrn_size = scrn.get_size()
+
+    
+
+    cx = round(scrn_size[0] / 2)
+    cy = round(scrn_size[1] / 2)
+
+    x1 = (p1[0] + offset[0] - cx) * scaler + cx
+    y1 = (p1[1] + offset[1] - cy) * scaler + cy
+
+    x2 = (p2[0] + offset[0] - cx) * scaler + cx
+    y2 = (p2[1] + offset[1] - cy) * scaler + cy
+
+
+
+    
+    rect = (min(x2,x2 + (x1 - x2)*2 ),min(y1,y1 + (y2-y1)*2), abs(x1 - x2)*2, abs(y1-y2)*2)
+    pygame.draw.ellipse(scrn, color, rect, size)
+
+
+# TODO: fundamentally change the way transform are handled to utilize math with numpy
+
 # redo so first 4 arguments are replaced with sketchpad
 class Shape:
     def __init__(self, sp, size = 1, color = (0,0,0)):
@@ -253,6 +278,40 @@ class Circle(Shape):
         radius = np.sqrt((center[0] - point[0])**2 + (center[1] - point[1])**2)
 
         return center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius
+
+class Elipse(Shape):
+    def __init__(self, sp, size=1, color=(0, 0, 0)):
+        super().__init__(sp, size, color)
+
+    def update(self):
+        if not self.on_screen():
+            return
+
+        if np.size(self.points, axis=0) < 2:
+            return
+
+        draw_elipse(self.scrn, self.points[0], self.points[1], 2, (0,0,0), self.sp.global_offset, self.sp.global_scaler)
+        
+    def add_point(self, point):
+        # if we have two points already, keep origin
+        if np.size(self.points, axis=0) >= 2:
+            self.points = np.array([self.points[0], self.points[-1]])
+
+        super().add_point(point)
+    
+    def get_boundaries(self):
+        if np.size(self.points, axis=0) < 2:
+            return self.points[0][0], self.points[0][1], self.points[0][0], self.points[0][1]
+
+        x1, y1 = self.apply_transformation(self.points[0])
+        x2, y2 = self.apply_transformation(self.points[1])
+
+        xmin, ymin = min(x2,x2 + (x1 - x2)*2 ),min(y1,y1 + (y2-y1)*2)
+
+        xmax, ymax = xmin + abs(x1 - x2)*2, ymin + abs(y1 - y2)*2
+        
+
+        return xmin, ymin, xmax, ymax
 
 # action for class for storing user actions for undo and redo
 class Action:

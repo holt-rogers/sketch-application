@@ -20,7 +20,6 @@ while running:
             running = False
     
         if event.type == pygame.MOUSEWHEEL:
-            print(event.x, event.y)
             sp.scale_canvas(event.y)
 
     scrn.fill(bg_color)

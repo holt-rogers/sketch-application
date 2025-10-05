@@ -148,6 +148,7 @@ class Toolbar:
             self.scrn_height = new_height
             pos_y = abs((self.scrn_height - self.height) / 2)
             diff = pos_y-self.pos_y
+            self.pos_y = pos_y
 
             
             self.main_menu.add_height(diff)
@@ -262,6 +263,9 @@ class Toolbar:
 
 
     def mouse_in_toolbar(self):
+        if self.hidden:
+            return False
+
         for p in self.side_panels:
             if p.mouse_in_panel():
                 return True

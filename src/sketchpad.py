@@ -1,5 +1,5 @@
 
-from drawings import FreeShape, Action, draw_rect, Line, Rectangle, Circle
+from drawings import *
 from toolbar import Toolbar
 from constants import select_rect_col
 import pygame
@@ -202,6 +202,8 @@ class Sketchpad:
                     shape = Rectangle(self)
                 elif self.shape == 2:
                     shape = Circle(self)
+                elif self.shape == 3:
+                    shape = Elipse(self)
 
                 self.new_shape = False
             
