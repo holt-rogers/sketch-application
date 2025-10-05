@@ -30,6 +30,9 @@ class Sketchpad:
         self.global_offset = [0,0]
         self.global_scaler = 1
 
+        self.anchored_scaler = 1
+        self.anchored_offset = [0,0]
+
         
 
 
@@ -244,6 +247,14 @@ class Sketchpad:
     def redo_action(self):
         if len(self.redo) > 0:
             self.redo[-1].redo_action()
+
+    def go_home(self):
+        self.global_scaler = self.anchored_scaler
+        self.global_offset = self.anchored_offset.copy()
+    
+    def set_home(self):
+        self.anchored_scaler    = self.global_scaler
+        self.anchored_offset   = self.global_offset.copy()
     
 # handles mouse position for the sketchpad
 class Pointer:

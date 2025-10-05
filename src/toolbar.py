@@ -125,6 +125,28 @@ class Toolbar:
 
         self.shape_selection.hide()
 
+        # anchor options
+        anchor_y = self.pos_y + button_padding*3
+        self.anchor_buttons = Panel(scrn, (sub_menu_x,anchor_y), (self.width, top_border + button_padding*2))
+        self.side_panels.append(self.anchor_buttons)
+
+
+        home_button = Button(scrn, [sub_menu_x + side_border, anchor_y + top_border], [28, 28])
+        home_button.add_graphic(path + "icons/home.png")
+        home_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
+        home_button.add_action(self.go_home)
+        self.anchor_buttons.add_button(home_button)
+
+        set_home_button = Button(scrn, [sub_menu_x + side_border, anchor_y + top_border + button_padding], [28, 28])
+        set_home_button.add_graphic(path + "icons/crossairs.png")
+        set_home_button.add_hovered_background((self.hovered_grey, self.hovered_grey, self.hovered_grey))
+        set_home_button.add_action(self.set_home)
+        self.anchor_buttons.add_button(set_home_button)
+
+        self.anchor_buttons.hide()
+
+
+
 
 
         # shortcuts
@@ -138,7 +160,9 @@ class Toolbar:
             [[pygame.K_r], self.rect_select],
             [[pygame.K_c], self.circle_select],
             [[pygame.K_e], self.elipse_select],
-            [[pygame.K_h], self.hide]
+            [[pygame.K_h], self.hide],
+            [[pygame.K_a], self.set_home],
+            [[pygame.K_g], self.go_home]
         ]
 
 
@@ -224,6 +248,8 @@ class Toolbar:
         self.sketchpad.change_shape(shape)
 
 
+
+
     def select_select(self):
         self.select_tool(0)
 
@@ -238,6 +264,21 @@ class Toolbar:
 
     def anchor_select(self):
         self.select_tool(3)
+        shown= self.anchor_buttons.shown()
+
+        for panel in self.side_panels:
+            panel.hide()
+
+        self.anchor_buttons.hide(shown)
+
+    def go_home(self):
+        self.anchor_buttons.hide()
+        self.sketchpad.go_home()
+
+    def set_home(self):
+        self.anchor_buttons.hide()
+        self.sketchpad.set_home()
+
 
     def file_select(self):
         self.select_tool(4)
@@ -271,6 +312,7 @@ class Toolbar:
                 return True
         
         return self.main_menu.mouse_in_panel()
+
 
     def hide(self):
         self.hidden = not self.hidden
