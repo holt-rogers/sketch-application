@@ -11,4 +11,5 @@ A Python drawing application designed for STEM note taking and problem solving.
 * `e` use elipse tool.
 * `a` set anchor.
 * `g` go to set anchor.
+* `h` hide / show tool bar. 
   
