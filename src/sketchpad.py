@@ -225,10 +225,10 @@ class Sketchpad:
             self.global_offset[1] += (self.pointer.pos[1] - self.pointer.old_pos[1]) / self.global_scaler
 
     def scale_canvas(self, direction):
-        scaler_change_per_scroll = 0.05
+        scaler_change_per_scroll = 0.07
 
 
-        self.global_scaler += scaler_change_per_scroll*direction
+        self.global_scaler += scaler_change_per_scroll*direction * self.global_scaler
         if self.global_scaler <= 0:
             self.global_scaler = scaler_change_per_scroll
             
