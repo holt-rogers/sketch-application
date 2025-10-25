@@ -2,6 +2,7 @@
 from drawings import *
 from toolbar import Toolbar
 from constants import select_rect_col
+from gridlines import GridLines
 import pygame
 
 # keeps track of drawing, moving and updating shapes
@@ -33,10 +34,12 @@ class Sketchpad:
         self.anchored_scaler = 1
         self.anchored_offset = [0,0]
 
+        self.gridlines = GridLines(self)
         
 
 
     def update(self):
+        self.gridlines.update()
         self.pointer.update()
         self.update_mover()
 

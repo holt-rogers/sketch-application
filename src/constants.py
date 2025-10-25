@@ -13,5 +13,5 @@ button_select = (63,138,238)
 hovered_grey = 240
 select_boundary_col = (30, 74, 144)
 select_rect_col = (169, 176, 218)
-
+grid_lines_col = (80, 80, 80)
 
