@@ -16,6 +16,8 @@ Then, run the `main.py` file. If there are any issues running, it is most likely
 
 ## How to use
 
+![](images/example.png)
+
 To adjust the viewport, right click to move around and scroll to scale. The pen tool allows you to create new freehand shapes. The select tool allows move or delete shapes you already made. The shape tool allows you to select a shape to create. Thes tools can be accessed with the buttons or shortcuts described below. 
 
 ### Shortcuts
