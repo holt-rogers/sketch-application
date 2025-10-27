@@ -2,10 +2,11 @@ import pygame
 from sketchpad import Sketchpad
 from constants import *
 
-
+icon_image = pygame.image.load(path + "icons/icon.png") 
  
 scrn = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption(title)   
+pygame.display.set_icon(icon_image)
 
 clock = pygame.time.Clock()
  
